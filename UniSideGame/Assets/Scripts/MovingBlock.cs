@@ -98,16 +98,10 @@ public class MovingBlock : MonoBehaviour
 
     }
 
-    public void Move()
+    public void SetCanMove(bool isCanMove)
     {
-        isCanMove = true;
+        this.isCanMove = isCanMove;
     }
-
-    public void Stop()
-    {
-        isCanMove = false;
-    }
-
     private void OnCollisionEnter2D(Collision2D other)
     {
         if (other.gameObject.tag != "Player")
