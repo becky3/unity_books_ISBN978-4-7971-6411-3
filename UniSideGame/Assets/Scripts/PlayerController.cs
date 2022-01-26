@@ -14,7 +14,7 @@ public class PlayerController : MonoBehaviour
         gameEnd,
     }
 
-    Rigidbody2D rigidbody2D;
+    new Rigidbody2D rigidbody2D;
     float axisH = 0.0f;
     public float speed = 3.0f;
 
@@ -32,6 +32,8 @@ public class PlayerController : MonoBehaviour
 
     string nowAnime = "";
     string oldAnime = "";
+
+    bool isMoving = false;
 
     public static GameState gameState = GameState.playing;
 
@@ -55,8 +57,10 @@ public class PlayerController : MonoBehaviour
         {
             return;
         }
-
-        axisH = Input.GetAxisRaw("Horizontal");
+        if (!isMoving)
+        {
+            axisH = Input.GetAxisRaw("Horizontal");
+        }
 
         if (axisH > 0f)
         {
@@ -156,7 +160,7 @@ public class PlayerController : MonoBehaviour
 
 
 
-    private void Jump()
+    public void Jump()
     {
         goJump = true;
 
@@ -185,5 +189,12 @@ public class PlayerController : MonoBehaviour
 
         GetComponent<CapsuleCollider2D>().enabled = false;
         rigidbody2D.AddForce(new Vector2(0, 10), ForceMode2D.Impulse);
+    }
+
+    public void SetAxis(float h, float v)
+    {
+        axisH = h;
+
+        isMoving = axisH != 0;
     }
 }

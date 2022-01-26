@@ -24,6 +24,21 @@ public class GameManager : MonoBehaviour
     public static int totalScore;
     public int stageScore = 0;
 
+    public AudioClip meGameOver;
+    public AudioClip meGameClear;
+
+    public GameObject inputUI;
+
+    private PlayerController plyerController
+    {
+        get
+        {
+            return GameObject
+            .FindGameObjectWithTag("Player")
+            .GetComponent<PlayerController>();
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -69,6 +84,10 @@ public class GameManager : MonoBehaviour
                 stageScore = 0;
                 UpdateScore();
 
+                ChangeSound(meGameClear);
+
+                inputUI.SetActive(false);
+
                 break;
 
 
@@ -86,12 +105,13 @@ public class GameManager : MonoBehaviour
                     timeCnt.isTimeOver = true;
                 }
 
+                ChangeSound(meGameOver);
+
+                inputUI.SetActive(false);
+
                 break;
 
             case State.playing:
-
-                var player = GameObject.FindGameObjectWithTag("Player");
-                var playerCnt = player.GetComponent<PlayerController>();
 
                 if (timeCnt != null && timeCnt.gameTime > 0f)
                 {
@@ -103,14 +123,14 @@ public class GameManager : MonoBehaviour
 
                     if (time == 0)
                     {
-                        playerCnt.GameOver();
+                        plyerController.GameOver();
                     }
                 }
 
-                if (playerCnt.score != 0)
+                if (plyerController.score != 0)
                 {
-                    stageScore += playerCnt.score;
-                    playerCnt.score = 0;
+                    stageScore += plyerController.score;
+                    plyerController.score = 0;
                     UpdateScore();
                 }
 
@@ -128,6 +148,23 @@ public class GameManager : MonoBehaviour
     {
         var score = stageScore + totalScore;
         scoreText.text = score.ToString();
+    }
+
+    private void ChangeSound(AudioClip clip)
+    {
+        var soundPlayer = GetComponent<AudioSource>();
+        if (soundPlayer == null)
+        {
+            return;
+        }
+
+        soundPlayer.Stop();
+        soundPlayer.PlayOneShot(clip);
+    }
+
+    public void Jump()
+    {
+        plyerController.Jump();
     }
 
 }
